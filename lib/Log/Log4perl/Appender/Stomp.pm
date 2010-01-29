@@ -1,11 +1,12 @@
 package Log::Log4perl::Appender::Stomp;
+our $VERSION = '1.000';
+
+# ABSTRACT: Log messages via STOMP
 
 use warnings;
 use strict;
 
 use Net::Stomp;
-
-our $VERSION = '0.0.1';
 
 our @ISA = qw(Log::Log4perl::Appender);
 
@@ -13,10 +14,10 @@ sub new {
     my ($class, %options) = @_;
 
     my $self = {
-        'name'       => "unknown name" || $options{'name'},
-        'hostname'   => "localhost"    || $options{'hostname'},
-        'port'       => 61613          || $options{'port'},
-        'topic_name' => "log"          || $options{'topic_name'},
+        'name'       => $options{'name'}       || 'unknown',
+        'hostname'   => $options{'hostname'}   || 'localhost',
+        'port'       => $options{'port'}       || 61613,
+        'topic_name' => $options{'topic_name'} || 'log',
         'connection' => undef,
         %options
     };
@@ -26,7 +27,7 @@ sub new {
     return $self;
 }
 
-sub log {
+sub log { ## no critic
     my ($self, %params) = @_;
 
     my $stomp = $self->{'connection'};
@@ -40,8 +41,8 @@ sub log {
             }
         );
 
-        unless ($stomp->connect({ 'login' => "noauth", 'passcode' => "supportyet" })) {
-            die("Connection to ", $self->{'hostname'}, ":", $self->{'port'}, " failed: $!");
+        unless ($stomp->connect({ 'login' => 'noauth', 'passcode' => 'supportyet' })) {
+            die('Connection to ', $self->{'hostname'}, ':', $self->{'port'}, " failed: $!");
         }
 
         $self->{'connection'} = $stomp;
@@ -49,7 +50,7 @@ sub log {
 
     return $stomp->send(
         {
-            'destination' => sprintf("/topic/%s", $self->{'topic_name'}),
+            'destination' => sprintf('/topic/%s', $self->{'topic_name'}),
             'body'        => $params{'message'}
         }
     );
@@ -61,11 +62,15 @@ sub DESTROY {
     if ($self->{'connection'}) {
         $self->{'connection'}->disconnect();
     }
+
+    return;
 }
 
 1;
 
-__END__
+
+
+=pod
 
 =head1 NAME
 
@@ -73,7 +78,7 @@ Log::Log4perl::Appender::Stomp - Log messages via STOMP
 
 =head1 VERSION
 
-Version 0.0.1
+version 1.000
 
 =head1 SYNOPSIS
 
@@ -110,43 +115,59 @@ You can change:
 
 =over
 
-=item hostname
+=item * hostname
 
-=item port
+=item * port
 
-=item topic_name
+=item * topic_name
 
 =back
 
 In the Log::Log4perl configuration.
 
-=head1 DEPENDENCIES
-
 =over
 
-=item Log::Log4perl
+=item L<Log::Log4perl>
 
-=item Net::Stomp
+=item L<Net::Stomp>
 
-=item ActiveMQ
+=item ActiveMQ L<http://activemq.apache.org>
 
 =back
 
-=head1 BUGS AND LIMITATIONS
+=head1 SUPPORT
 
-Please report any bugs or feature requests to
-C<bug-log-log4perl-appender-stomp@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.
+You can find documentation for this module with the perldoc command.
+
+    perldoc Log::Log4perl::Appender::Stomp
+
+You can also look for information at:
+
+=over
+
+=item * RT: CPAN's request tracker: L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Log-Log4perl-Appender-Stomp>
+
+=item * AnnoCPAN: Annotated CPAN documentation: L<http://annocpan.org/dist/Log-Log4perl-Appender-Stomp>
+
+=item * CPAN Ratings: L<http://cpanratings.perl.org/d/Log-Log4perl-Appender-Stomp>
+
+=item * Search CPAN: L<http://search.cpan.org/dist/Log-Log4perl-Appender-Stomp>
+
+=back
 
 =head1 AUTHOR
 
-Adam Flott  C<< <adam@npjh.com> >>
+  Adam Flott <adam@npjh.com>
 
-=head1 LICENCE AND COPYRIGHT
+=head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2008, Adam Flott C<< <adam@npjh.com> >>.
+This software is copyright (c) 2010 by Adam Flott.
 
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself. See L<perlartistic>.
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
+
+
+__END__
+

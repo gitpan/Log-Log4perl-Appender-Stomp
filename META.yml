@@ -2,21 +2,14 @@
 abstract: 'Log messages via STOMP'
 author:
   - 'Adam Flott <adam@npjh.com>'
-distribution_type: module
-generated_by: 'Module::Install version 0.77'
+generated_by: 'Dist::Zilla version 1.100160'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Log-Log4perl-Appender-Stomp
-no_index:
-  directory:
-    - inc
-    - t
-    - examples
 requires:
+  ExtUtils::MakeMaker: 6.11
   Log::Log4perl: 0
   Net::Stomp: 0
-resources:
-  license: http://dev.perl.org/licenses/
-version: 0.0.1
+version: 1.000

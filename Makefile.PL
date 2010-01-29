@@ -1,10 +1,36 @@
-use inc::Module::Install;
 
-name        'Log-Log4perl-Appender-Stomp';
-all_from    'lib/Log/Log4perl/Appender/Stomp.pm';
-author      'Adam Flott <adam@npjh.com>';
+use strict;
+use warnings;
 
-requires    'Log::Log4perl' => 0;
-requires    'Net::Stomp'    => 0;
 
-WriteAll;
+
+use ExtUtils::MakeMaker 6.11;
+
+
+
+my %WriteMakefileArgs = (
+                       'test' => {
+                                   'TESTS' => 't/*.t'
+                                 },
+                       'NAME' => 'Log::Log4perl::Appender::Stomp',
+                       'DISTNAME' => 'Log-Log4perl-Appender-Stomp',
+                       'AUTHOR' => 'Adam Flott <adam@npjh.com>',
+                       'ABSTRACT' => 'Log messages via STOMP',
+                       'EXE_FILES' => [],
+                       'VERSION' => '1.000',
+                       'LICENSE' => 'perl',
+                       'PREREQ_PM' => {
+                                        'ExtUtils::MakeMaker' => '6.11',
+                                        'Net::Stomp' => '0',
+                                        'Log::Log4perl' => '0'
+                                      }
+                     );
+
+
+delete $WriteMakefileArgs{LICENSE}
+  unless eval { ExtUtils::MakeMaker->VERSION(6.31) };
+
+WriteMakefile(%WriteMakefileArgs);
+
+
+
